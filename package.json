@@ -1,0 +1,23 @@
+{
+  "name": "bun-fast",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "24.9.1",
+    "gitmoji": "1.1.1",
+    "husky": "9.1.7"
+  },
+  "peerDependencies": {
+    "typescript": "5"
+  },
+  "dependencies": {
+    "fastify": "5.6.1",
+    "mongoose": "8.19.2"
+  },
+  "scripts": {
+    "dev": "bun run src/index.ts",
+    "prepare": "husky"
+  }
+}
