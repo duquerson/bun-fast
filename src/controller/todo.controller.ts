@@ -1,30 +1,74 @@
 
-import { todoModel } from "../model/todo.model.ts";
+import { TodoModel } from "../model/todo.model.ts";
 import type { Todo, UpdateTodo } from "../types/todo.d.ts";
+import { ValidationError, NotFoundError, ClientError } from "../helpers/app.errors.ts";
 
-class todoController {
+class TodoController {
 
 	static async getAllTodos() {
-		return await todoModel.getAllTodos();
+		const todos = await TodoModel.getAllTodos();
+		return todos || [];
 	}
 
 	static async getTodoById(id: string) {
-		return await todoModel.getTodoById(id);
+
+		const todo = await TodoModel.getTodoById(id);
+
+
+		return todo;
 	}
 
 	static async createTodo(data: Todo) {
-		return await todoModel.createTodo(data);
+		if (!data.description?.trim()) {
+			throw new ValidationError('Todo description is required');
+		}
+
+		const todo = await TodoModel.createTodo({
+			...data,
+			description: data.description.trim()
+		});
+
+		if (!todo) {
+			throw new ClientError('Failed to create todo');
+		}
+
+		return todo;
 	}
 
 	static async updateTodo(id: string, data: UpdateTodo) {
-		return await todoModel.updateTodo(id, data);
+
+		const updatedTodo = await TodoModel.updateTodo(id, {
+			...data,
+			description: data.description?.trim()
+		});
+
+		if (!updatedTodo) {
+			throw new NotFoundError(`Todo with ID ${id} not found`);
+		}
+
+		return updatedTodo;
+	}
+	static async updateTodoCompletion(id: string, completed: boolean) {
+
+		const updatedTodo = await TodoModel.updateTodoCompletion(id, completed);
+
+		if (!updatedTodo) {
+			throw new NotFoundError(`Todo with ID ${id} not found`);
+		}
+
+		return updatedTodo;
 	}
 
 	static async deleteTodo(id: string) {
-		return await todoModel.deleteTodo(id);
+
+
+		const deleted = await TodoModel.deleteTodo(id);
+
+		return deleted;
 	}
+
 }
 
-Object.freeze(todoController);
+Object.freeze(TodoController);
 
-export { todoController };
+export { TodoController };
