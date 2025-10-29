@@ -1,6 +1,6 @@
 import { model } from "mongoose";
 import type { Todo } from "../types/todo.d.ts";
-import { NotFoundError } from "../middleware/errors.ts";
+import { NotFoundError } from "../helpers/app.errors.ts";
 import { schema } from '../schema/schema.model.ts';
 //--------------------------------------------------------------------------
 
