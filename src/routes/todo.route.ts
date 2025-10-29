@@ -1,57 +1,35 @@
 import type { FastifyInstance } from 'fastify';
 import { todoController } from '../controller/todo.controller.ts';
-import { NotFoundError, ServerError, ValidationError, ClientError } from '../middleware/errors.ts';
-
+import { NotFoundError, ServerError, ValidationError, ClientError } from '../helpers/app.errors.ts';
+import { SchemaBODY, SchemaID, SchemaUpdateTodo, SchemaCompletion } from '../schema/shema.routes.ts';
+import type { RequestById, RequestWithBody, TodoRequest, UpdateCompletionRequest } from '../types/request.ts';
 
 async function todoRoutes(app: FastifyInstance) {
 
 	app.get('/', async (request, reply) => {
 		const todos = await todoController.getAllTodos();
 		if (!todos) {
-			throw new ServerError('No se pudieron obtener los todos');
+			throw new ServerError('Cannot be get the Todos');
 		}
 		return reply.send({ success: true, data: todos });
 	});
 
-	app.get<{ Params: { id: string } }>('/:id', {
-		schema: {
-			params: {
-				type: 'object',
-				properties: {
-					id: { type: 'string', minLength: 1 }
-				},
-				required: ['id'],
-				additionalProperties: false
-			}
-		}
+	app.get<RequestById>('/:id', {
+		schema: SchemaID
 	}, async (request, reply) => {
 		const { id } = request.params;
 		const todo = await todoController.getTodoById(id);
 
 		if (!todo) {
-			throw new NotFoundError(`Todo con ID ${id} no encontrado`);
+			throw new NotFoundError(`Todo whit ID ${id} cannot be Found`);
 		}
 
 		return reply.send({ success: true, data: todo });
 	});
 
 
-	app.post<{ Body: { description: string; completed: boolean } }>('/', {
-		schema: {
-			body: {
-				type: 'object',
-				properties: {
-					description: {
-						type: 'string',
-						minLength: 1,
-						maxLength: 500
-					},
-					completed: { type: 'boolean' }
-				},
-				required: ['description', 'completed'],
-				additionalProperties: false,
-			}
-		}
+	app.post<RequestWithBody>('/', {
+		schema: SchemaBODY
 	}, async (request, reply) => {
 		const data = request.body;
 		data.description = data.description.trim();
@@ -61,36 +39,14 @@ async function todoRoutes(app: FastifyInstance) {
 		}
 		return reply.status(201).send({
 			success: true,
-			message: 'Todo creado exitosamente',
+			message: 'Success Create Todo',
 			data: todo
 		});
 	});
 
 
-	app.put<{ Params: { id: string }, Body: Required<{ description: string; completed: boolean }> }>('/:id', {
-		schema: {
-			params: {
-				type: 'object',
-				properties: {
-					id: { type: 'string', minLength: 1 }
-				},
-				required: ['id'],
-				additionalProperties: false
-			},
-			body: {
-				type: 'object',
-				properties: {
-					description: {
-						type: 'string',
-						minLength: 1,
-						maxLength: 500
-					},
-					completed: { type: 'boolean' }
-				},
-				required: ['description', 'completed'],
-				additionalProperties: false,
-			}
-		}
+	app.put<TodoRequest>('/:id', {
+		schema: SchemaUpdateTodo
 	}, async (request, reply) => {
 		const { id } = request.params;
 		const data = request.body;
@@ -98,72 +54,37 @@ async function todoRoutes(app: FastifyInstance) {
 		const todo = await todoController.updateTodo(id, data);
 
 		if (!todo) {
-			throw new ClientError(`Todo con ID ${id} no puede ser actualizado`);
+			throw new ClientError(`Todo whit ID ${id} cannot be Update`);
 		}
 
 		return reply.send({
 			success: true,
-			message: 'Todo actualizado',
+			message: 'Upgrade Todo Success',
 			data: todo
 		});
 	});
 
 
-	app.patch<{ Params: { id: string }, Body: { description?: string; completed?: boolean } }>('/:id', {
-		schema: {
-			params: {
-				type: 'object',
-				properties: {
-					id: { type: 'string', minLength: 1 }
-				},
-				required: ['id'],
-				additionalProperties: false
-			},
-			body: {
-				type: 'object',
-				properties: {
-					description: {
-						type: 'string',
-						minLength: 1,
-						maxLength: 500
-					},
-					completed: { type: 'boolean' }
-				},
-				additionalProperties: false,
-				minProperties: 1
-			}
-		}
+	app.patch<UpdateCompletionRequest>('/:id', {
+		schema: SchemaCompletion
 	}, async (request, reply) => {
 		const { id } = request.params;
 		const data = request.body;
-		if (data.description !== undefined) {
-			data.description = data.description.trim();
-		}
 		const todo = await todoController.updateTodo(id, data);
-
 		if (!todo) {
-			throw new ClientError(`Todo con ID ${id} no puede ser actualizado`);
+			throw new ClientError(`Todo whit ID ${id} cannot be Update`);
 		}
 
 		return reply.send({
 			success: true,
-			message: 'Todo actualizado parcialmente',
+			message: 'Update Completed Success',
 			data: todo
 		});
 	});
 
 
-	app.delete<{ Params: { id: string } }>('/:id', {
-		schema: {
-			params: {
-				type: 'object',
-				properties: {
-					id: { type: 'string', minLength: 1 }
-				},
-				required: ['id'],
-				additionalProperties: false
-			}
-		}
+	app.delete<RequestById>('/:id', {
+		schema: SchemaID
 	}, async (request, reply) => {
 		const { id } = request.params;
 
