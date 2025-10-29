@@ -20,4 +20,3 @@ function createErrorFactory<Name extends string>(name: Name) {
 export const NotFoundError = createErrorFactory('NotFoundError');
 export const ClientError = createErrorFactory('ClientError');
 export const ValidationError = createErrorFactory('ValidationError');
-export const ServerError = createErrorFactory('ServerError');
