@@ -1,14 +1,19 @@
 import type { ErrorOptions } from "../types/error";
 
 function createErrorFactory<Name extends string>(name: Name) {
+	if (!name?.trim()) {
+		throw new Error('Error name cannot be empty');
+	}
 	return class BusinessError extends Error {
 		public override readonly name: Name = name;
 		public readonly status: number;
 		public readonly code?: string;
 		public readonly details?: unknown;
 		constructor(message: string, options: ErrorOptions = {}) {
-			super(message);
-			this.name = name
+			if (!message?.trim()) {
+				throw new Error('Error message cannot be empty');
+			}
+			super(message.trim());
 			Object.setPrototypeOf(this, new.target.prototype);
 			this.status = options.status ?? 400;
 			this.code = options.code;
