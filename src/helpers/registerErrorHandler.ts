@@ -4,6 +4,8 @@ import type { ErrorOptions } from "../types/error";
 
 export function registerErrorHandler(app: FastifyInstance) {
 	app.setErrorHandler((error: FastifyError & ErrorOptions, request: FastifyRequest, reply: FastifyReply) => {
+
+		//identify process and stats
 		const status = error.status ?? (error.validation ? 400 : 500);
 		const isProd = process.env.NODE_ENV === "production";
 
