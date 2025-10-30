@@ -1,12 +1,14 @@
 import type { FastifyInstance } from 'fastify';
 import { TodoController } from '../controller/todo.controller.ts';
 import { NotFoundError } from '../helpers/app.errors.ts';
-import { SchemaBODY, SchemaID, SchemaUpdateTodo, SchemaCompletion } from '../schema/shema.routes.ts';
+import { SchemaBODY, SchemaID, SchemaUpdateTodo, SchemaCompletion, SchemaGetAll, SchemaDelete } from '../schema/shema.routes.ts';
 import type { RequestById, RequestWithBody, TodoRequest, UpdateCompletionRequest } from '../types/request.ts';
 
 async function todoRoutes(app: FastifyInstance) {
 
-	app.get('/', async (request, reply) => {
+	app.get('/', {
+		schema: SchemaGetAll
+	}, async (request, reply) => {
 		const todos = await TodoController.getAllTodos();
 		return reply.send({
 			success: true,
@@ -79,7 +81,7 @@ async function todoRoutes(app: FastifyInstance) {
 	});
 
 	app.delete<RequestById>('/:id', {
-		schema: SchemaID
+		schema: SchemaDelete
 	}, async (request, reply) => {
 		const { id } = request.params;
 		await TodoController.deleteTodo(id);
