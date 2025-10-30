@@ -1,5 +1,5 @@
-import type { FastifyInstance, FastifyError, FastifyRequest, FastifyReply } from "fastify";
-import type { ErrorOptions } from "../types/error";
+import type { FastifyInstance, FastifyError, FastifyRequest, FastifyReply } from 'fastify';
+import type { ErrorOptions } from '../types/error';
 
 
 export function registerErrorHandler(app: FastifyInstance) {
@@ -7,7 +7,7 @@ export function registerErrorHandler(app: FastifyInstance) {
 
 		//identify process and stats
 		const status = error.status ?? (error.validation ? 400 : 500);
-		const isProd = process.env.NODE_ENV === "production";
+		const isProd = process.env.NODE_ENV === 'production';
 
 		// Log
 		if (status >= 500) request.log.error(error);
@@ -17,7 +17,7 @@ export function registerErrorHandler(app: FastifyInstance) {
 		if (error.validation) {
 			return reply.code(400).send({
 				success: false,
-				message: "Error de validación",
+				message: 'Error de validación',
 				errores: error.validation,
 			});
 		}
@@ -26,11 +26,11 @@ export function registerErrorHandler(app: FastifyInstance) {
 		const response = {
 			success: false,
 			error: {
-				name: error.name ?? "Error",
+				name: error.name ?? 'Error',
 				message:
 					isProd && status === 500
-						? "Error interno del servidor"
-						: error.message ?? "Error desconocido",
+					  ? 'Error interno del servidor'
+					  : error.message ?? 'Error desconocido',
 				code: error.code,
 				...(isProd ? {} : { details: error.details ?? error.stack }),
 			},

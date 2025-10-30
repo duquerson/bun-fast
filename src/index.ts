@@ -1,11 +1,11 @@
-import Fastify from "fastify";
-import { todoRoutes } from "./routes/todo.route.ts";
+import Fastify from 'fastify';
+import { todoRoutes } from './routes/todo.route.ts';
 import { connect } from './config/conectDB.ts';
 const app = Fastify({ logger: true });
 import { DATA } from './utils/CONST.ts';
-import { registerErrorHandler } from "./helpers/registerErrorHandler.ts";
-import { configSwagger } from "./config/configSwagger.ts";
-import { SchemaHealth } from "./schema/shema.routes.ts";
+import { registerErrorHandler } from './helpers/registerErrorHandler.ts';
+import { configSwagger } from './config/configSwagger.ts';
+import { SchemaHealth } from './schema/shema.routes.ts';
 //----------------------------------------------------------
 // CONST
 //---------------------------------------------------------
@@ -21,7 +21,7 @@ await configSwagger(app, host, port);
 //-----------------------------------------------------
 app.get('/health', {
 	schema: SchemaHealth
-}, async (request, reply) => {
+}, async () => {
 	return {
 		status: 'ok',
 		timestamp: new Date().toISOString(),
@@ -29,7 +29,7 @@ app.get('/health', {
 		environment: process.env.NODE_ENV || 'development',
 	};
 });
-app.register(todoRoutes, { prefix: "/api/v1/todos" });
+app.register(todoRoutes, { prefix: '/api/v1/todos' });
 //------------------------------------------------------
 //handlers routes and errors
 //------------------------------------------------------
@@ -41,7 +41,7 @@ registerErrorHandler(app);
 
 //------------------------------------------------------
 //start services
-//-----------------------------------------------------
+//------------------------------------------------------
 const start = async () => {
 	try {
 		await connect(URL);
@@ -51,7 +51,7 @@ const start = async () => {
 		console.log(`🌐 API: http://${host}:${port}`);
 		console.log(`📚 Swagger UI: http://${host}:${port}/documentation`);
 		console.log(`🏥 Health Check: http://${host}:${port}/health`);
-		console.log(`🗄️  MongoDB: Conectado`);
+		console.log('🗄️  MongoDB: Conectado');
 		console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 	} catch (err) {
 		app.log.error(err);

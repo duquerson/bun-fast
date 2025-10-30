@@ -1,4 +1,4 @@
-import type { ErrorOptions } from "../types/error";
+import type { ErrorOptions } from '../types/error';
 
 function createErrorFactory<Name extends string>(name: Name) {
 	if (!name?.trim()) {
@@ -19,7 +19,7 @@ function createErrorFactory<Name extends string>(name: Name) {
 			this.code = options.code;
 			this.details = options.details;
 		}
-	}
+	};
 }
 
 export const NotFoundError = createErrorFactory('NotFoundError');

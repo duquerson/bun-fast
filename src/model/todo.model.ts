@@ -1,6 +1,6 @@
-import mongoose, { model } from "mongoose";
-import type { Todo } from "../types/todo.d.ts";
-import { NotFoundError, ValidationError } from "../helpers/app.errors.ts";
+import mongoose, { model } from 'mongoose';
+import type { Todo } from '../types/todo.d.ts';
+import { NotFoundError, ValidationError } from '../helpers/app.errors.ts';
 import { schema } from '../schema/schema.model.ts';
 //--------------------------------------------------------------------------
 

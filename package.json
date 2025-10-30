@@ -4,9 +4,15 @@
   "type": "module",
   "private": true,
   "devDependencies": {
+    "@eslint/js": "9.38.0",
     "@types/bun": "latest",
     "@types/node": "24.9.1",
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "@typescript-eslint/parser": "8.46.2",
+    "eslint": "9.38.0",
+    "eslint-config-semistandard": "17.0.0",
     "gitmoji": "1.1.1",
+    "globals": "16.4.0",
     "husky": "9.1.7"
   },
   "peerDependencies": {
@@ -20,6 +26,11 @@
   },
   "scripts": {
     "dev": "bun run src/index.ts",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
     "prepare": "husky"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/eslint-config-semistandard/eslintrc.json"
   }
 }
