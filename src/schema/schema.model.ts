@@ -4,10 +4,10 @@ import type { ITodo } from '../types/todo.d.ts';
 export const schema = new Schema<ITodo>({
 	description: {
 		type: String,
-		required: [true, 'La descripción es obligatoria'],
+		required: [true, 'Description is required'],
 		trim: true,
-		minlength: [1, 'La descripción debe tener al menos 1 carácter'],
-		maxlength: [2000, 'La descripción debe tener como máximo 2000 caracteres']
+		minlength: [1, 'Description must be at least 1 character long'],
+		maxlength: [2000, 'Description must be at most 2000 characters long']
 	},
 	completed: {
 		type: Boolean,

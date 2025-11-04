@@ -10,7 +10,7 @@ const TodoMongoose = model('Todos', schema);
 
 class TodoModel {
 
-	static async validateMongoId(id: string) {
+	static validateMongoId(id: string) {
 		if (!mongoose.Types.ObjectId.isValid(id)) {
 			throw new ValidationError('Invalid ID format');
 		}

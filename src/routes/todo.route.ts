@@ -1,18 +1,19 @@
 import type { FastifyInstance } from 'fastify';
 import { TodoController } from '../controller/todo.controller.ts';
-import { NotFoundError } from '../helpers/app.errors.ts';
 import { SchemaBODY, SchemaID, SchemaUpdateTodo, SchemaCompletion, SchemaGetAll, SchemaDelete } from '../schema/shema.routes.ts';
-import type { RequestById, RequestWithBody, TodoRequest, UpdateCompletionRequest } from '../types/request.ts';
+import type { RequestById, RequestWithBody, TodoRequest, UpdateCompletionRequest, RequestWithQuery } from '../types/request.ts';
 
 async function todoRoutes(app: FastifyInstance) {
 
-	app.get('/', {
+	app.get<RequestWithQuery>('/', {
 		schema: SchemaGetAll
 	}, async (request, reply) => {
-		const todos = await TodoController.getAllTodos();
+		const limit = request.query.limit || 100;
+		const todos = await TodoController.getAllTodos(limit);
+
 		return reply.send({
 			success: true,
-			data: todos || []
+			data: todos
 		});
 	});
 
@@ -22,18 +23,17 @@ async function todoRoutes(app: FastifyInstance) {
 		const { id } = request.params;
 		const todo = await TodoController.getTodoById(id);
 
-		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
-		}
-
-		return reply.send({ success: true, data: todo });
+		return reply.send({
+			success: true,
+			data: todo
+		});
 	});
 
 	app.post<RequestWithBody>('/', {
 		schema: SchemaBODY
 	}, async (request, reply) => {
 		const data = request.body;
-		data.description = data.description.trim();
+
 		const todo = await TodoController.createTodo(data);
 
 		return reply.status(201).send({
@@ -48,12 +48,8 @@ async function todoRoutes(app: FastifyInstance) {
 	}, async (request, reply) => {
 		const { id } = request.params;
 		const data = request.body;
-		data.description = data.description.trim();
-		const todo = await TodoController.updateTodo(id, data);
 
-		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
-		}
+		const todo = await TodoController.updateTodo(id, data);
 
 		return reply.send({
 			success: true,
@@ -69,13 +65,9 @@ async function todoRoutes(app: FastifyInstance) {
 		const { completed } = request.body;
 		const todo = await TodoController.updateTodoCompletion(id, completed);
 
-		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
-		}
-
 		return reply.send({
 			success: true,
-			message: 'Completion status updated',
+			message: 'Completion status updated successfully',
 			data: todo
 		});
 	});

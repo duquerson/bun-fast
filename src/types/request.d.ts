@@ -1,6 +1,9 @@
 import type { Todo } from '../types/todo.d.ts';
+
+export type ObjectId = string;
+
 export interface RequestById {
-	Params: { id: string; }
+	Params: { id: ObjectId; }
 }
 
 export interface RequestWithBody {
@@ -8,12 +11,18 @@ export interface RequestWithBody {
 }
 
 export interface TodoRequest {
-	Params: { id: string };
-	Body: Required<Todo>;
+	Params: { id: ObjectId };
+	Body: Partial<Todo>;
 }
 
 export interface UpdateCompletionRequest extends RequestById {
 	Body: {
 		completed: boolean;
+	};
+}
+
+export interface RequestWithQuery {
+	Querystring: {
+		limit?: number;
 	};
 }

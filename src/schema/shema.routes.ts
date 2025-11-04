@@ -1,12 +1,22 @@
-
-
 // Schema for GET ALL
 export const SchemaGetAll = {
-	description: 'Obtiene todos los TODOs',
+	description: 'Get all TODOs',
 	tags: ['TODOs'],
+	querystring: {
+		type: 'object',
+		properties: {
+			limit: {
+				type: 'integer',
+				minimum: 1,
+				maximum: 1000,
+				default: 100,
+				description: 'Maximum number of todos to return'
+			}
+		}
+	},
 	response: {
 		200: {
-			description: 'Lista de TODOs',
+			description: 'List of TODOs',
 			type: 'object',
 			properties: {
 				success: { type: 'boolean' },
@@ -21,6 +31,7 @@ export const SchemaGetAll = {
 						}
 					}
 				}
+
 			}
 		}
 	}
@@ -28,7 +39,7 @@ export const SchemaGetAll = {
 
 // Schema for GET by ID
 export const SchemaID = {
-	description: 'Obtiene un TODO por su ID',
+	description: 'Get a TODO by ID',
 	tags: ['TODOs'],
 	params: {
 		type: 'object',
@@ -36,7 +47,8 @@ export const SchemaID = {
 			id: {
 				type: 'string',
 				minLength: 1,
-				description: 'ID del TODO'
+				pattern: '^[0-9a-fA-F]{24}$',
+				description: 'Unique identifier'
 			}
 		},
 		required: ['id'],
@@ -44,7 +56,7 @@ export const SchemaID = {
 	},
 	response: {
 		200: {
-			description: 'TODO encontrado',
+			description: 'TODO found',
 			type: 'object',
 			properties: {
 				success: { type: 'boolean' },
@@ -59,7 +71,7 @@ export const SchemaID = {
 			}
 		},
 		404: {
-			description: 'TODO no encontrado',
+			description: 'TODO not found',
 			type: 'object',
 			properties: {
 				error: { type: 'string' }
@@ -68,9 +80,9 @@ export const SchemaID = {
 	}
 } as const;
 
-// Schema for POST (crea TODO)
+// Schema for POST (create TODO)
 export const SchemaBODY = {
-	description: 'Crea un nuevo TODO',
+	description: 'Create a new TODO',
 	tags: ['TODOs'],
 	body: {
 		type: 'object',
@@ -78,12 +90,12 @@ export const SchemaBODY = {
 			description: {
 				type: 'string',
 				minLength: 1,
-				maxLength: 500,
-				description: 'Descripción de la tarea'
+				maxLength: 2000,
+				description: 'Task description'
 			},
 			completed: {
 				type: 'boolean',
-				description: 'Estado de completado'
+				description: 'Completion status'
 			}
 		},
 		required: ['description', 'completed'],
@@ -91,7 +103,7 @@ export const SchemaBODY = {
 	},
 	response: {
 		201: {
-			description: 'TODO creado exitosamente',
+			description: 'TODO created successfully',
 			type: 'object',
 			properties: {
 				success: { type: 'boolean' },
@@ -107,7 +119,7 @@ export const SchemaBODY = {
 			}
 		},
 		400: {
-			description: 'Datos inválidos',
+			description: 'Invalid data',
 			type: 'object',
 			properties: {
 				error: { type: 'string' }
@@ -118,7 +130,7 @@ export const SchemaBODY = {
 
 // Schema for PUT (update all todo)
 export const SchemaUpdateTodo = {
-	description: 'Actualiza un TODO existente',
+	description: 'Update an existing TODO',
 	tags: ['TODOs'],
 	params: {
 		type: 'object',
@@ -126,7 +138,8 @@ export const SchemaUpdateTodo = {
 			id: {
 				type: 'string',
 				minLength: 1,
-				description: 'ID del TODO a actualizar'
+				pattern: '^[0-9a-fA-F]{24}$',
+				description: 'Unique identifier'
 			}
 		},
 		required: ['id'],
@@ -138,20 +151,19 @@ export const SchemaUpdateTodo = {
 			description: {
 				type: 'string',
 				minLength: 1,
-				maxLength: 500,
-				description: 'Nueva descripción de la tarea'
+				maxLength: 2000,
+				description: 'New task description'
 			},
 			completed: {
 				type: 'boolean',
-				description: 'Nuevo estado de completado'
+				description: 'New completion status'
 			}
 		},
-		required: ['description', 'completed'],
 		additionalProperties: false,
 	},
 	response: {
 		200: {
-			description: 'TODO actualizado exitosamente',
+			description: 'TODO updated successfully',
 			type: 'object',
 			properties: {
 				success: { type: 'boolean' },
@@ -167,14 +179,14 @@ export const SchemaUpdateTodo = {
 			}
 		},
 		404: {
-			description: 'TODO no encontrado',
+			description: 'TODO not found',
 			type: 'object',
 			properties: {
 				error: { type: 'string' }
 			}
 		},
 		400: {
-			description: 'Datos inválidos',
+			description: 'Invalid data',
 			type: 'object',
 			properties: {
 				error: { type: 'string' }
@@ -185,7 +197,7 @@ export const SchemaUpdateTodo = {
 
 // Schema for PATCH (update only completed)
 export const SchemaCompletion = {
-	description: 'Actualiza el estado de completado de un TODO',
+	description: 'Update the completion status of a TODO',
 	tags: ['TODOs'],
 	params: {
 		type: 'object',
@@ -193,7 +205,9 @@ export const SchemaCompletion = {
 			id: {
 				type: 'string',
 				minLength: 1,
-				description: 'ID del TODO'
+				pattern: '^[0-9a-fA-F]{24}$',
+				description: 'Unique identifier'
+
 			}
 		},
 		required: ['id'],
@@ -204,7 +218,7 @@ export const SchemaCompletion = {
 		properties: {
 			completed: {
 				type: 'boolean',
-				description: 'Nuevo estado de completado'
+				description: 'New completion status'
 			}
 		},
 		required: ['completed'],
@@ -212,7 +226,7 @@ export const SchemaCompletion = {
 	},
 	response: {
 		200: {
-			description: 'Estado actualizado exitosamente',
+			description: 'Completion status updated successfully',
 			type: 'object',
 			properties: {
 				success: { type: 'boolean' },
@@ -228,7 +242,7 @@ export const SchemaCompletion = {
 			}
 		},
 		404: {
-			description: 'TODO no encontrado',
+			description: 'TODO not found',
 			type: 'object',
 			properties: {
 				error: { type: 'string' }
@@ -239,7 +253,7 @@ export const SchemaCompletion = {
 
 // Schema for DELETE
 export const SchemaDelete = {
-	description: 'Elimina un TODO',
+	description: 'Delete a TODO',
 	tags: ['TODOs'],
 	params: {
 		type: 'object',
@@ -247,7 +261,9 @@ export const SchemaDelete = {
 			id: {
 				type: 'string',
 				minLength: 1,
-				description: 'ID del TODO a eliminar'
+				pattern: '^[0-9a-fA-F]{24}$',
+				description: 'Unique identifier'
+
 			}
 		},
 		required: ['id'],
@@ -255,11 +271,11 @@ export const SchemaDelete = {
 	},
 	response: {
 		204: {
-			description: 'TODO eliminado exitosamente (sin contenido)',
+			description: 'TODO deleted successfully (no content)',
 			type: 'null'
 		},
 		404: {
-			description: 'TODO no encontrado',
+			description: 'TODO not found',
 			type: 'object',
 			properties: {
 				error: { type: 'string' }
@@ -274,7 +290,7 @@ export const SchemaHealth = {
 	tags: ['System'],
 	response: {
 		200: {
-			description: 'system stats',
+			description: 'System stats',
 			type: 'object',
 			properties: {
 				status: { type: 'string' },
