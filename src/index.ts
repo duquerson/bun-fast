@@ -2,20 +2,15 @@ import Fastify from 'fastify';
 import { todoRoutes } from './routes/todo.route.ts';
 import { connect } from './config/conectDB.ts';
 const app = Fastify({ logger: true });
-import { DATA } from './utils/CONST.ts';
 import { registerErrorHandler } from './helpers/registerErrorHandler.ts';
 import { configSwagger } from './config/configSwagger.ts';
 import { SchemaHealth } from './schema/shema.routes.ts';
-//----------------------------------------------------------
-// CONST
-//---------------------------------------------------------
-const port = 4321;
-const host = DATA.HOST ?? 'localhost';
-const URL = DATA.URL ?? 'http://localhost:27017/todos';
+import { config } from './config/index.ts';
+
 //-----------------------------------------------------
 //Swagger
 //-----------------------------------------------------
-await configSwagger(app, host, port);
+await configSwagger(app, config.host, config.port);
 //-----------------------------------------------------
 // ROUTES
 //-----------------------------------------------------
@@ -44,13 +39,13 @@ registerErrorHandler(app);
 //------------------------------------------------------
 const start = async () => {
 	try {
-		await connect(URL);
-		await app.listen({ port, host });
+		await connect(config.mongoUrl);
+		await app.listen({ port: config.port, host: config.host });
 		console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 		console.log('✅ Servidor corriendo correctamente');
-		console.log(`🌐 API: http://${host}:${port}`);
-		console.log(`📚 Swagger UI: http://${host}:${port}/documentation`);
-		console.log(`🏥 Health Check: http://${host}:${port}/health`);
+		console.log(`🌐 API: http://${config.host}:${config.port}`);
+		console.log(`📚 Swagger UI: http://${config.host}:${config.port}/documentation`);
+		console.log(`🏥 Health Check: http://${config.host}:${config.port}/health`);
 		console.log('🗄️  MongoDB: Conectado');
 		console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 	} catch (err) {
@@ -58,4 +53,5 @@ const start = async () => {
 		process.exit(1);
 	}
 };
+
 start();

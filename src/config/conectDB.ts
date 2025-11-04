@@ -1,16 +1,10 @@
 import mongoose from 'mongoose';
 let isConnected = false;
 
-
-//------------------------------------------------------------------------------
-// Conexión a MongoDB 
-//------------------------------------------------------------------------------
-
-export const connect = (request: string): Promise<void> => {
-
+export const connect = async (url: string): Promise<void> => {
 	if (isConnected) {
 		console.log('✅ MongoDB ya está conectado');
-		return Promise.resolve();
+		return;
 	}
 
 	const options = {
@@ -21,15 +15,13 @@ export const connect = (request: string): Promise<void> => {
 		retryReads: true,
 	};
 
-
-	return mongoose.connect(request, options)
-		.then(() => {
-			isConnected = true;
-			console.log('✅ MongoDB conectado exitosamente');
-		})
-		.catch((error) => {
-			isConnected = false;
-			console.log('❌ Error conectando a MongoDB');
-			throw error;
-		});
+	try {
+		await mongoose.connect(url, options);
+		isConnected = true;
+		console.log('✅ MongoDB conectado exitosamente');
+	} catch (error) {
+		isConnected = false;
+		console.log('❌ Error conectando a MongoDB');
+		throw error;
+	}
 };
