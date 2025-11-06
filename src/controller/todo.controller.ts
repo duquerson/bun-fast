@@ -2,17 +2,13 @@ import { TodoModel } from '../model/todo.model.ts';
 import type { Todo, UpdateTodo } from '../types/todo.d.ts';
 import { TodoCreateSchema, TodoUpdateSchema, CompletionUpdateSchema } from '../schema/schema.todo.ts';
 
-
 class TodoController {
-
 	static async getAllTodos(limit: number) {
-
 		const todos = await TodoModel.getAllTodos(limit);
 		return todos ?? [];
 	}
 
 	static async getTodoById(id: string) {
-
 		return await TodoModel.getTodoById(id);
 	}
 
@@ -32,10 +28,8 @@ class TodoController {
 	}
 
 	static async deleteTodo(id: string) {
-
 		return await TodoModel.deleteTodo(id);
 	}
-
 }
 
 Object.freeze(TodoController);

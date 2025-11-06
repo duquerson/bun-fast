@@ -6,8 +6,6 @@ import { schema } from '../schema/schema.model.ts';
 
 const TodoMongoose = model('Todos', schema);
 
-//--------------------------------------------------------------------------
-
 class TodoModel {
 
 	static validateMongoId(id: string) {
@@ -25,7 +23,7 @@ class TodoModel {
 		await this.validateMongoId(id);
 		const todo = await TodoMongoose.findById(id);
 		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
+			throw new NotFoundError(`Todo with ID ${id} not found`, { status: 404 });
 		}
 		return todo.toJSON();
 	}
@@ -43,12 +41,11 @@ class TodoModel {
 		});
 
 		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
+			throw new NotFoundError(`Todo with ID ${id} not found`, { status: 404 });
 		}
 
 		return todo.toJSON();
 	}
-
 
 	static async updateTodoCompletion(id: string, completed: boolean) {
 		await this.validateMongoId(id);
@@ -62,7 +59,7 @@ class TodoModel {
 		);
 
 		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
+			throw new NotFoundError(`Todo with ID ${id} not found`, { status: 404 });
 		}
 
 		return todo.toJSON();
@@ -72,9 +69,8 @@ class TodoModel {
 		await this.validateMongoId(id);
 		const todo = await TodoMongoose.findByIdAndDelete(id);
 		if (!todo) {
-			throw new NotFoundError(`Todo with ID ${id} not found`);
+			throw new NotFoundError(`Todo with ID ${id} not found`, { status: 404 });
 		}
-
 
 		return true;
 	}

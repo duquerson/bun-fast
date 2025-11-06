@@ -4,13 +4,11 @@ import { SchemaBODY, SchemaID, SchemaUpdateTodo, SchemaCompletion, SchemaGetAll,
 import type { RequestById, RequestWithBody, TodoRequest, UpdateCompletionRequest, RequestWithQuery } from '../types/request.ts';
 
 async function todoRoutes(app: FastifyInstance) {
-
 	app.get<RequestWithQuery>('/', {
 		schema: SchemaGetAll
 	}, async (request, reply) => {
 		const limit = request.query.limit || 100;
 		const todos = await TodoController.getAllTodos(limit);
-
 		return reply.send({
 			success: true,
 			data: todos
@@ -22,7 +20,6 @@ async function todoRoutes(app: FastifyInstance) {
 	}, async (request, reply) => {
 		const { id } = request.params;
 		const todo = await TodoController.getTodoById(id);
-
 		return reply.send({
 			success: true,
 			data: todo
@@ -33,9 +30,7 @@ async function todoRoutes(app: FastifyInstance) {
 		schema: SchemaBODY
 	}, async (request, reply) => {
 		const data = request.body;
-
 		const todo = await TodoController.createTodo(data);
-
 		return reply.status(201).send({
 			success: true,
 			message: 'Todo created successfully',
@@ -48,9 +43,7 @@ async function todoRoutes(app: FastifyInstance) {
 	}, async (request, reply) => {
 		const { id } = request.params;
 		const data = request.body;
-
 		const todo = await TodoController.updateTodo(id, data);
-
 		return reply.send({
 			success: true,
 			message: 'Todo updated successfully',
@@ -64,7 +57,6 @@ async function todoRoutes(app: FastifyInstance) {
 		const { id } = request.params;
 		const { completed } = request.body;
 		const todo = await TodoController.updateTodoCompletion(id, completed);
-
 		return reply.send({
 			success: true,
 			message: 'Completion status updated successfully',
@@ -77,7 +69,6 @@ async function todoRoutes(app: FastifyInstance) {
 	}, async (request, reply) => {
 		const { id } = request.params;
 		await TodoController.deleteTodo(id);
-
 		return reply.status(204).send();
 	});
 
