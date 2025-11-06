@@ -11,6 +11,8 @@ API RESTful para gestión de tareas TODO construida con Fastify, TypeScript y Mo
 - 🔍 **ESLint**: Linting y calidad de código
 - 🏥 **Health Check**: Monitoreo del estado del sistema
 - ⚡ **Bun**: Runtime rápido de JavaScript
+- 🧪 **Bun Test**: Framework de pruebas integrado
+- ✅ **Zod**: Validación de esquemas
 
 ## Instalación
 
@@ -65,7 +67,11 @@ Asegúrate de tener MongoDB corriendo localmente o configura la variable `APIMON
 
 - `bun run dev` - Inicia el servidor en modo desarrollo
 - `bun run build` - Construye el proyecto para producción
+- `bun run start` - Inicia el servidor en modo producción
+- `bun run test` - Ejecuta las pruebas
+- `bun run test:watch` - Ejecuta las pruebas en modo watch
 - `bun run lint` - Ejecuta ESLint para verificar calidad de código
+- `bun run lint:fix` - Corrige automáticamente errores de linting
 
 ### Estructura del Proyecto
 
@@ -74,11 +80,12 @@ src/
 ├── config/          # Configuraciones (DB, Swagger)
 ├── controller/      # Controladores de la API
 ├── helpers/         # Utilidades y manejo de errores
+├── mocks/           # Mocks para pruebas
 ├── model/           # Modelos de datos
 ├── routes/          # Definición de rutas
 ├── schema/          # Esquemas JSON y validaciones
+├── test/            # Pruebas unitarias y E2E
 ├── types/           # Definiciones de tipos TypeScript
-└── utils/           # Utilidades generales
 ```
 
 ## Licencia
@@ -92,6 +99,8 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 - [MongoDB](https://www.mongodb.com/) - Base de datos
 - [Mongoose](https://mongoosejs.com/) - ODM para MongoDB
 - [Bun](https://bun.sh/) - Runtime de JavaScript
+- [Bun Test](https://bun.sh/docs/test) - Framework de pruebas
+- [Zod](https://zod.dev/) - Validación de esquemas
 - [ESLint](https://eslint.org/) - Linting
 
 ---
