@@ -23,7 +23,7 @@ export default [
     },
     rules: {
       'semi': ['error', 'always'],
-      'quotes': ['error', 'single'],
+      'quotes': ['error', 'single', { 'avoidEscape': false }],
       'indent': ['error', 'tab'],
       'no-tabs': 'off',
       'no-unused-vars': 'off',
