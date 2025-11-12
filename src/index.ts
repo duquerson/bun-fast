@@ -1,11 +1,24 @@
 import Fastify from 'fastify';
 import { todoRoutes } from './routes/todo.route.ts';
 import { connect } from './config/conectDB.ts';
+import { configSecurity } from './config/configSecurity.ts';
 const app = Fastify({ logger: true });
-import { registerErrorHandler } from './helpers/registerErrorHandler.ts';
+import { setupMvcErrorHandler } from './helpers/setupMvcErrorHandler.ts';
+import { InputSanitizer } from './helpers/inputSanitizer.ts';
 import { configSwagger } from './config/configSwagger.ts';
 import { SchemaHealth } from './schema/shema.routes.ts';
 import { config } from './config/index.ts';
+
+//-----------------------------------------------------
+//Security Configuration
+//-----------------------------------------------------
+await configSecurity(app);
+
+//-----------------------------------------------------
+//Input Sanitization Middleware - XSS & SQL Protection
+//-----------------------------------------------------
+const sanitizationMiddleware = InputSanitizer.createSanitizationMiddleware();
+app.addHook('preHandler', sanitizationMiddleware);
 
 //-----------------------------------------------------
 //Swagger
@@ -32,7 +45,7 @@ app.setNotFoundHandler(async (request, reply) => {
 	reply.status(404).send({ error: `Route ${request.url} not found` });
 });
 
-registerErrorHandler(app);
+setupMvcErrorHandler(app);
 
 //------------------------------------------------------
 //start services
